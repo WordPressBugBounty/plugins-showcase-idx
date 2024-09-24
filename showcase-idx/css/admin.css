@@ -1,0 +1,133 @@
+.sidx-plugin-activation-banner {
+}
+
+h2.sidx-title {
+  font-size: 40px;
+}
+
+.sidx-title img {
+  height: 40px;
+}
+
+.sidx-admin .card {
+  max-width: 100%;
+}
+
+.sidx-admin h2 {
+  font-size: 1.75em;
+}
+
+.sidx-admin .center {
+  text-align: center;
+}
+
+.sidx-admin .center-readable {
+  text-align: left;
+  width: 50%;
+  margin: 1.5em auto;
+}
+
+.sidx-admin .big-input {
+  width: 300px;
+  height: 50px;
+  font-size: 18px;
+}
+
+.sidx-admin .url {
+  font-size: 18px;
+}
+
+.sidx-admin .submit {
+  margin-top: 10px;
+}
+
+.sidx-admin .submit .button {
+  height: auto;
+  padding: 10px 20px;
+  font-size: 20px;
+}
+
+.sidx-admin .row {
+  display: flex;
+  margin: 5em 1em;
+}
+
+.sidx-admin .column {
+  flex: 50%;
+  text-align: center;
+}
+
+/**
+ * WP Admin Top SIDX Menu
+ */
+#wpadminbar ul li#wp-admin-bar-showcaseidx_globalmenu_root > a {
+    background-image: url(../images/showcaseidx_wp_admin_bar_logo_icon.png);
+    background-position: left center;
+    background-repeat: no-repeat;
+    padding-left: 23px; /* Adjust according to image size to push text across. */
+    margin-left: 5px;   /* Minor adjustmnet so bg image is not pushed flush to item to its left */
+}
+/* END: WP Admin Top SIDX Menu */
+
+/**
+ * WP Admin Dashboard SIDX Widget
+ */
+#showcaseidx_dashboard_widget .inside {
+    background-color: black;
+    color: white;
+    padding-top: 1em;
+}
+#showcaseidx_dashboard_widget img.showcaseidx_dashboard_widget_sidx_logo {
+    height: 2.5em;
+    width: auto;
+}
+
+#showcaseidx_dashboard_widget .showcaseidx_dashboard_widget_button {
+    margin: 0 1%;
+    width: 30%;
+}
+
+#showcaseidx_dashboard_widget hr {
+    margin-top: 1.5em;
+    border-color: #6D727A;
+    border-width: 0.75px;
+}
+
+#showcaseidx_dashboard_widget {
+    color: white;
+    font-weight: bold;
+}
+#showcaseidx_dashboard_widget .showcaseidx_dashboard_widget_section h2 {
+    color: #19CB98;
+    display: inline-block;
+    margin-right: 0.5em;
+}
+#showcaseidx_dashboard_widget .showcaseidx_dashboard_widget_section a {
+    color: #6D727A;
+    text-decoration: underline;
+    font-size: 90%;
+}
+#showcaseidx_dashboard_widget .showcaseidx_dashboard_widget_section a:hover,
+#showcaseidx_dashboard_widget .showcaseidx_dashboard_widget_section a:active {
+    color: white;
+}
+
+#showcaseidx_dashboard_widget .showcaseidx_dashboard_widget_post {
+    margin-bottom: 1em;
+}
+#showcaseidx_dashboard_widget .showcaseidx_dashboard_widget_post a:link,
+#showcaseidx_dashboard_widget .showcaseidx_dashboard_widget_post a:visited,
+#showcaseidx_dashboard_widget .showcaseidx_dashboard_widget_post a:hover,
+#showcaseidx_dashboard_widget .showcaseidx_dashboard_widget_post a:active {
+    color: white;
+}
+#showcaseidx_dashboard_widget .showcaseidx_dashboard_widget_post a:hover,
+#showcaseidx_dashboard_widget .showcaseidx_dashboard_widget_post a:active {
+    text-decoration: underline;
+}
+#showcaseidx_dashboard_widget .showcaseidx_dashboard_widget_post_dts {
+    color: #6D727A;
+    font-weight: normal;
+    text-transform: uppercase;
+}
+/* END: WP Admin Dashboard SIDX Widget */
