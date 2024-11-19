@@ -179,6 +179,26 @@ function showcase_render_search_page( WP $wp, $widget_url_path, $widget_url_quer
   }
 }
 
+function get_client_ip() {
+  if (array_key_exists('HTTP_X_FORWARDED_FOR', $_SERVER)) {
+    return  $_SERVER['HTTP_X_FORWARDED_FOR'];
+  } else if (array_key_exists('REMOTE_ADDR', $_SERVER)) {
+    return $_SERVER['REMOTE_ADDR'];
+  } else if (array_key_exists('HTTP_CLIENT_IP', $_SERVER)) {
+    return $_SERVER['HTTP_CLIENT_IP'];
+  }
+
+  return '';
+}
+
+function get_user_agent() {
+  if (array_key_exists('HTTP_USER_AGENT', $_SERVER)) {
+    return  $_SERVER['HTTP_USER_AGENT'];
+  }
+
+  return '';
+}
+
 function showcase_retrieve_app( $path, $query ) {
   $cookies = array();
   foreach ( $_COOKIE as $name => $value ) {
@@ -196,7 +216,11 @@ function showcase_retrieve_app( $path, $query ) {
       'timeout' => 10,
       'httpversion' => '1.1',
       'cookies' => $cookies,
-      'body' => array_map( 'stripslashes', $_POST )
+      'body' => array_map( 'stripslashes', $_POST ),
+      'headers' => array(
+        'X-Forwarded-For' => get_client_ip(),
+        'X-Client-User-Agent' => get_user_agent(),
+      ),
     )
   );
 }

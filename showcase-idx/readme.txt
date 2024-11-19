@@ -6,10 +6,10 @@ Tags: idx, idx search, MLS, real estate search, lead capture, real estate, realt
 
 Requires at least: 4.6.0
 
-Tested up to: 6.4.4
+Tested up to: 6.6.2
 Requires PHP: 5.3.0
 
-Stable tag: 3.2.11
+Stable tag: 3.2.12
 
 
 
@@ -142,7 +142,7 @@ Check things out while you’re waiting for MLS approval! We’ll give you login
 Once you’ve been approved by the MLS, we will notify you via email that the 10-day trial, with live data, has officially begun.
 
 **Step 4: Follow the “5 Steps to Success Checklist”**
-To help you set up your IDX, our team will send you the “5 Steps to Success Checklist” via email. We’re here to help! If any questions come up during installation or setup, [email us](help@showcaseidx.com) or call us at 1-800-478-0181.
+To help you set up your IDX, our team will send you the “5 Steps to Success Checklist” via email. We’re here to help! If any questions come up during installation or setup, [email us](mailto:help@showcaseidx.com) or call us at 1-800-478-0181.
 
 
 = Do You Have Setup Fees or Contracts? =
@@ -214,6 +214,11 @@ Please visit the Showcase IDX website for the latest news and information. [Sear
 
 == Changelog ==
 
+= 3.2.12 =
+
+* Performance enhancements.
+* Added compatibility with WordPress 6.6.
+
 = 3.2.11 =
 
 * Improve documentation formatting and fix links.
@@ -224,7 +229,7 @@ Please visit the Showcase IDX website for the latest news and information. [Sear
 
 = 3.2.9 =
 
-* Added compatiblity with WordPress 6.4.
+* Added compatibility with WordPress 6.4.
 
 = 3.2.8 =
 
@@ -232,14 +237,14 @@ Please visit the Showcase IDX website for the latest news and information. [Sear
 
 = 3.2.7 =
 
-* Added compatiblity with WordPress 6.3.
+* Added compatibility with WordPress 6.3.
 
 = 3.2.6 =
 
 * Enhancing the error handling capabilities for listings, further aligning with SEO best practices.
 
 = 3.2.5 =
-* Added compatiblity with WordPress 6.2.
+* Added compatibility with WordPress 6.2.
 * Addresses a PHP issue that occurred for some sites when installing the IDX plugin on PHP 8.
 
 = 3.2.4 =
@@ -263,7 +268,7 @@ Please visit the Showcase IDX website for the latest news and information. [Sear
 * Tested with latest Wordpress.
 
 = 3.1.7 =
-* Improve SEO compatiblity with Yoast and Jetpack so that they use our SEO metadata for listing pages.
+* Improve SEO compatibility with Yoast and Jetpack so that they use our SEO metadata for listing pages.
 
 = 3.1.6 =
 * Add support for new showcaseidx_nav attributes to control what items are included.

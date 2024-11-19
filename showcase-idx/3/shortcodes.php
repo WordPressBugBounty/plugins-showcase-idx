@@ -119,7 +119,11 @@ function showcase_retrieve_widget( $widget, $attrs ) {
     array(
       'timeout' => 10,
       'httpversion' => '1.1',
-      'cookies' => $cookies
+      'cookies' => $cookies,
+      'headers' => array(
+        'X-Forwarded-For' => get_client_ip(),
+        'X-Client-User-Agent' => get_user_agent(),
+      ),
     )
   );
 }
