@@ -2,14 +2,14 @@
 
 Contributors: showcaseidx
 
-Tags: idx, idx search, MLS, real estate search, lead capture, real estate, realtor, listings, property search, real estate agent, housing, SEO, mobile friendly, customizable, showcase idx, market leader, marketleader, rets,
+Tags: idx, idx search, MLS, real estate search, lead capture
 
 Requires at least: 4.6.0
 
-Tested up to: 6.6.2
+Tested up to: 6.8
 Requires PHP: 5.3.0
 
-Stable tag: 3.2.12
+Stable tag: 3.3.0
 
 
 
@@ -57,18 +57,6 @@ Prominent calls-to-action turn visitors into leads. Customize where, how, and wh
 
 
 
-**GET HELP TURNING LEADS INTO CLIENTS**
-
-No more missed opportunities! Our IDX WordPress plugin is equipped with drip emails that feature new listings, status changes, and price changes to listings that fit the criteria of the search that a lead is subscribed to. Have a past client? Set up a search for them for listings in their area.
-
-
-
-**LIVE SUPPORT FOR QUICK & EASY RESOLUTIONS**
-
-Get one-on-one help when you need it. We’re here to give tips on how to get more clients with our plugin and answer any technical questions you might have during and after installation.
-
-
-
 **SEO THAT WORKS**
 
 Our customers see an increase of 79% in Google traffic, on average. Thanks to server prerendering, we’re uniquely equipped to ensure Google sees all your content (including listings) as fully being part of your website. As a result, your site’s SEO performance will get a significant boost that no other IDX plugin can offer.
@@ -78,28 +66,6 @@ Our customers see an increase of 79% in Google traffic, on average. Thanks to se
 **MLS SEARCH THAT’S EASY TO ADD & EASY TO USE**
 
 Showcase IDX will enable your leads and clients to browse listings with lightning-fast response times using the fully integrated map-based search. And In addition to price and bedroom and bathroom count, they can even drill down to look for detailed MLS search features (such as square footage and amenities)—quickly, easily, and without ever feeling overwhelmed.
-
-
-
-**STATE-OF-THE-ART MAPPING TOOLS**
-
-With Showcase IDX, you get the [#1 polygon search available for real estate websites](https://showcaseidx.com/state-of-the-art-mapping-idx/?utm_source=WordPress.org&utm_medium=referral&utm_campaign=plugin-page) **and** the only IDX plugin that allows for multiple polygon search. Your website visitors will benefit from unparalleled precision and customization options when searching for listings.
-
-
-
-**SHOWCASE EXPERTISE WITH NEIGHBORHOOD PAGES**
-
-No other agent knows your local market like you. Prove it with neighborhood and community pages showing listings matching your predefined search criteria—location, price, keyword, and more.
-
-
-
-**REVIEWS: DON’T JUST TAKE OUR WORD FOR IT**
-
-“Since switching to Showcase, my bounce rate is down 20%, time spent on my site has doubled, and most importantly I am getting 4x more registrations on my site.” - Will Rogers, Alper Real Estate Group
-
-“Best IDX plugin by far! Showcase IDX is now the only IDX I recommend to my clients. Visually, it is stunning and so much better than the other IDXs. To top it off, customer service is top notch.” - Sinoun Chea, ShiftWeb Solutions
-
-“Converts website leads at a high level. Showcase IDX is leading the way in the world of WordPress IDX solutions. Clients love utilizing the Showcase IDX product with original features not found in any other product.” - Wayne Stratton, Wayne Stratton Consulting
 
 
 **FREE TRIAL—NO CREDIT CARD REQUIRED**
@@ -213,6 +179,11 @@ Please visit the Showcase IDX website for the latest news and information. [Sear
 
 
 == Changelog ==
+
+= 3.3.0 =
+
+* Added Compatibility with WordPress 6.8.
+* Addresses a PHP issue that occurred for some sites when installing IDX plugin on PHP 8.3.16.
 
 = 3.2.12 =
 

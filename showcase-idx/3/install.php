@@ -93,3 +93,26 @@ function showcaseidx_uuid() {
     mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
   );
 }
+
+function showcase_developer_promotion_banner() {
+    if(!isset($_COOKIE['showcase-developer-promotion-banner'])) {
+        $url = " https://showcaseidx.com/partners/";
+        echo <<<BANNER
+        <div id="showcase-developer-promotion-banner" class="notice notice-success is-dismissible" style="border-color: #04C89A">
+            <p><strong>Developers:</strong> Grow your business with <strong><a target="_blank" href="$url">Showcase IDX’s Partner Program</a></strong> by referring us to clients!</p>
+            <button type="button" class="notice-dismiss" id="showcase-developer-promotion-banner-btn"><span class="screen-reader-text">Dismiss this notice.</span></button>
+        </div>
+        <script>
+          document.getElementById('showcase-developer-promotion-banner-btn').addEventListener('click', function() {
+              var banner = document.getElementById('showcase-developer-promotion-banner');
+              banner.style.display = 'none';
+              // Set a cookie that expires in 180 days.
+              var date = new Date();
+              date.setTime(date.getTime() + (180 * 24 * 60 * 60 * 1000)); // 180 days in milliseconds
+              document.cookie = "showcase-developer-promotion-banner=true; expires=" + date.toUTCString() + "; path=/";
+          });
+        </script>
+BANNER;
+    }
+}
+add_action("admin_notices" , "showcase_developer_promotion_banner");

@@ -30,8 +30,9 @@ function showcaseidx_setup_seo( $metadata ) {
   $foundN = preg_match_all('/<meta [^>]*? property="og:[^"]*" content="[^"]*"\s*\/>/', $metadata->meta, $metaMatches);
   if ($foundN) {
     foreach ($metaMatches[0] as $meta) {
-      preg_match('/property="(?<property>[^"]+)"\s+content="(?<content>[^"]+)"/', $meta, $m);
-      $metaProps[$m['property']] = $m['content'];
+      if(preg_match('/property="(?<property>[^"]+)"\s+content="(?<content>[^"]+)"/', $meta, $m)) {
+          $metaProps[$m['property']] = $m['content'];
+      }
     }
   }
 
