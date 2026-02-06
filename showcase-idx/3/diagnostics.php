@@ -14,7 +14,11 @@ function showcase_render_diagnostics_page( WP $wp ) {
 
     $active_plugins = [];
     $showcaseidx_plugin = null;
-    foreach (get_option('active_plugins') as $plugin_file) {
+    $active_plugins_option = get_option('active_plugins');
+    if (!is_array($active_plugins_option)) {
+        $active_plugins_option = [];
+    }
+    foreach ($active_plugins_option as $plugin_file) {
       $data = get_plugin_data(WP_PLUGIN_DIR . '/' . $plugin_file);
       if (strpos($plugin_file, 'showcaseidx.php') !== false) {
         $showcaseidx_plugin = $data;
@@ -24,12 +28,13 @@ function showcase_render_diagnostics_page( WP $wp ) {
     }
 
     global $wp_version;
+    $bootstrap_time = isset($_SERVER['REQUEST_TIME_FLOAT']) ? round(microtime(TRUE) - $_SERVER['REQUEST_TIME_FLOAT'], 3) : '';
     $data = [
         'wp_version'                => $wp_version,
         'php_version'               => phpversion(),
         'php_sapi_name'             => php_sapi_name(),
         'php_memory_limit'          => ini_get('memory_limit'),
-        'php_bootstrap_time'        => round(microtime(TRUE) - $_SERVER['REQUEST_TIME_FLOAT'], 3),
+        'php_bootstrap_time'        => $bootstrap_time,
         'wp_theme'                  => $wp_theme->get('Name'),
         'wp_theme_version'          => $wp_theme->get('Version'),
         'active_plugins'            => $active_plugins,
@@ -56,7 +61,7 @@ function showcase_render_diagnostics_page( WP $wp ) {
         echo "<html><body>";
     }
     echo <<<HTML
-<style type-="text/css">
+<style type="text/css">
 table td, table th {
     word-break: normal;
 }
@@ -85,7 +90,11 @@ ul.warnings li {
             </tr>
             <tr>
                 <td width="70%">Version</td>
-                <td width="30%">{$showcaseidx_plugin['Version']}</td>
+                <td width="30%">
+HTML;
+echo isset($showcaseidx_plugin['Version']) ? $showcaseidx_plugin['Version'] : '';
+echo <<<HTML
+</td>
             </tr>
             <tr>
                 <td width="50%">Website UUID</td>
@@ -172,21 +181,28 @@ if ($opcache['enabled']) {
                 </td>
                 <td>{$opcache['directives']['opcache.revalidate_freq']}</td>
             </tr>
+HTML;
+    if (!empty($opcache['overview'])) {
+        $hitRate = isset($opcache['overview']['hit_rate_percentage']) ? $opcache['overview']['hit_rate_percentage'] : 'N/A';
+        $numCached = isset($opcache['overview']['num_cached_scripts']) ? $opcache['overview']['num_cached_scripts'] : 'N/A';
+        $maxFiles = isset($opcache['directives']['opcache.max_accelerated_files']) ? $opcache['directives']['opcache.max_accelerated_files'] : 'N/A';
+        echo <<<HTML
             <tr>
                 <td>
                     Hit Rate
-                    <div class=help>A "hit" is a compiled php script that is loaded from cache, rather than re-compiled each request. If cache is installed and working property, you should see a hit rate well above 50%. Below 10% indicates the cache isn’t being used usefully.</div>
+                    <div class=help>A "hit" is a compiled php script that is loaded from cache, rather than re-compiled each request. If cache is installed and working property, you should see a hit rate well above 50%. Below 10% indicates the cache isn't being used usefully.</div>
                 </td>
-                <td>{$opcache['overview']['hit_rate_percentage']}%</td>
+                <td>{$hitRate}%</td>
             </tr>
             <tr>
                 <td>
                     Num Cached Scripts
                     <div class=help>Shows how many php scripts are in the cache. In a normally-functioning opcache, there should be many hundreds-to-thousands of files. Seeing less than this is an indicator that the cache isn't being used usefully.</div>
                 </td>
-                <td>{$opcache['overview']['num_cached_scripts']} (out of {$opcache['directives']['opcache.max_accelerated_files']} max)</td>
+                <td>{$numCached} (out of {$maxFiles} max)</td>
             </tr>
 HTML;
+    }
         } else {
     echo <<<HTML
             <tr>
@@ -206,6 +222,5 @@ HTML;
     } else {
         echo "</body></html>";
     }
-    exit;
 }
 

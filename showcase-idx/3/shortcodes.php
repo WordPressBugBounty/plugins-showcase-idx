@@ -105,10 +105,7 @@ function showcaseidx_build_query( $query ) {
 }
 
 function showcase_retrieve_widget( $widget, $attrs ) {
-  $cookies = array();
-  foreach ( $_COOKIE as $name => $value ) {
-    $cookies[] = new WP_Http_Cookie( array( 'name' => $name, 'value' => $value ) );
-  }
+  $cookies = showcaseidx_get_cookies();
 
   $query = $attrs;
   $query['website_uuid'] = get_option( 'showcaseidx_website_uuid' );
@@ -123,6 +120,7 @@ function showcase_retrieve_widget( $widget, $attrs ) {
       'headers' => array(
         'X-Forwarded-For' => get_client_ip(),
         'X-Client-User-Agent' => get_user_agent(),
+        'Origin' => home_url(),
       ),
     )
   );

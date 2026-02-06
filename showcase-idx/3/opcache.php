@@ -14,7 +14,7 @@ class OpCacheService
 {
     protected $data;
     protected $options;
-    protected $defaults = [
+    protected $defaults = array(
         'allow_filelist'   => true,
         'allow_invalidate' => true,
         'allow_reset'      => true,
@@ -26,15 +26,15 @@ class OpCacheService
         'debounce_rate'    => 250,
         'cookie_name'      => 'opcachegui',
         'cookie_ttl'       => 365
-    ];
+    );
 
-    private function __construct($options = [])
+    private function __construct($options = array())
     {
         $this->options = array_merge($this->defaults, $options);
         $this->data = $this->compileState();
     }
 
-    public static function init($options = [])
+    public static function init($options = array())
     {
         $self = new self($options);
         return $self;
@@ -82,64 +82,93 @@ class OpCacheService
     protected function compileState()
     {
         $enabled = false;
-        $version = [];
-        $overview = [];
-        $directives = [];
+        $version = array();
+        $overview = array();
+        $directives = array();
 
         if (!extension_loaded('Zend OPcache')) {
             $version['opcache_product_name'] = 'The Zend OPcache extension does not appear to be installed.';
         } else {
             $config = opcache_get_configuration();
+
+            // Check if opcache_get_configuration() returned valid data
+            if ($config === false || !is_array($config) || !isset($config['version'])) {
+                $version['opcache_product_name'] = 'OPcache installed, but configuration unavailable (restricted by opcache.restrict_api).';
+                return array(
+                    'enabled'  => $enabled,
+                    'version'    => $version,
+                    'overview'   => $overview,
+                    'directives' => $directives
+                );
+            }
+
             $version = $config['version'];
 
             $ocEnabled = ini_get('opcache.enable');
             if ($ocEnabled == 1) {
                 $enabled = true;
-                $status = opcache_get_status();
+                $status = opcache_get_status(false);
 
-                $overview = array_merge(
-                    $status['memory_usage'], $status['opcache_statistics'], [
-                        'used_memory_percentage'  => round(100 * (
-                                ($status['memory_usage']['used_memory'] + $status['memory_usage']['wasted_memory'])
-                                / $config['directives']['opcache.memory_consumption'])),
-                        'hit_rate_percentage'     => round($status['opcache_statistics']['opcache_hit_rate']),
-                        'wasted_percentage'       => round($status['memory_usage']['current_wasted_percentage'], 2),
-                        'readable' => [
-                            'total_memory'       => $this->size($config['directives']['opcache.memory_consumption']),
-                            'used_memory'        => $this->size($status['memory_usage']['used_memory']),
-                            'free_memory'        => $this->size($status['memory_usage']['free_memory']),
-                            'wasted_memory'      => $this->size($status['memory_usage']['wasted_memory']),
-                            'num_cached_scripts' => number_format($status['opcache_statistics']['num_cached_scripts']),
-                            'hits'               => number_format($status['opcache_statistics']['hits']),
-                            'misses'             => number_format($status['opcache_statistics']['misses']),
-                            'blacklist_miss'     => number_format($status['opcache_statistics']['blacklist_misses']),
-                            'num_cached_keys'    => number_format($status['opcache_statistics']['num_cached_keys']),
-                            'max_cached_keys'    => number_format($status['opcache_statistics']['max_cached_keys']),
+                // Check if opcache_get_status() returned valid data
+                if ($status === false || !is_array($status) || !isset($status['memory_usage']) || !isset($status['opcache_statistics'])) {
+                    $version['opcache_product_name'] .= ' enabled, but status unavailable (restricted by opcache.restrict_api).';
+                } else {
+                    $memoryConsumption = isset($config['directives']['opcache.memory_consumption']) ? $config['directives']['opcache.memory_consumption'] : 0;
+                    $usedMemoryPercentage = 0;
+                    if ($memoryConsumption > 0 && isset($status['memory_usage']['used_memory']) && isset($status['memory_usage']['wasted_memory'])) {
+                        $usedMemoryPercentage = round(100 * (
+                            ($status['memory_usage']['used_memory'] + $status['memory_usage']['wasted_memory'])
+                            / $memoryConsumption));
+                    }
+
+                    $opcacheHitRate = isset($status['opcache_statistics']['opcache_hit_rate']) ? $status['opcache_statistics']['opcache_hit_rate'] : 0;
+                    $wastedPercentage = isset($status['memory_usage']['current_wasted_percentage']) ? $status['memory_usage']['current_wasted_percentage'] : 0;
+                    $startTime = isset($status['opcache_statistics']['start_time']) ? $status['opcache_statistics']['start_time'] : 0;
+                    $lastRestartTime = isset($status['opcache_statistics']['last_restart_time']) ? $status['opcache_statistics']['last_restart_time'] : 0;
+
+                    $overview = array_merge(
+                        isset($status['memory_usage']) ? $status['memory_usage'] : array(),
+                        isset($status['opcache_statistics']) ? $status['opcache_statistics'] : array(),
+                        array(
+                        'used_memory_percentage'  => $usedMemoryPercentage,
+                        'hit_rate_percentage'     => round($opcacheHitRate),
+                        'wasted_percentage'       => round($wastedPercentage, 2),
+                        'readable' => array(
+                            'total_memory'       => $this->size($memoryConsumption),
+                            'used_memory'        => $this->size(isset($status['memory_usage']['used_memory']) ? $status['memory_usage']['used_memory'] : 0),
+                            'free_memory'        => $this->size(isset($status['memory_usage']['free_memory']) ? $status['memory_usage']['free_memory'] : 0),
+                            'wasted_memory'      => $this->size(isset($status['memory_usage']['wasted_memory']) ? $status['memory_usage']['wasted_memory'] : 0),
+                            'num_cached_scripts' => number_format(isset($status['opcache_statistics']['num_cached_scripts']) ? $status['opcache_statistics']['num_cached_scripts'] : 0),
+                            'hits'               => number_format(isset($status['opcache_statistics']['hits']) ? $status['opcache_statistics']['hits'] : 0),
+                            'misses'             => number_format(isset($status['opcache_statistics']['misses']) ? $status['opcache_statistics']['misses'] : 0),
+                            'blacklist_miss'     => number_format(isset($status['opcache_statistics']['blacklist_misses']) ? $status['opcache_statistics']['blacklist_misses'] : 0),
+                            'num_cached_keys'    => number_format(isset($status['opcache_statistics']['num_cached_keys']) ? $status['opcache_statistics']['num_cached_keys'] : 0),
+                            'max_cached_keys'    => number_format(isset($status['opcache_statistics']['max_cached_keys']) ? $status['opcache_statistics']['max_cached_keys'] : 0),
                             'interned'           => null,
-                            'start_time'         => date('Y-m-d H:i:s', $status['opcache_statistics']['start_time']),
-                            'last_restart_time'  => ($status['opcache_statistics']['last_restart_time'] == 0
-                                    ? 'never'
-                                    : date('Y-m-d H:i:s', $status['opcache_statistics']['last_restart_time'])
-                                )
-                        ]
-                    ]
+                            'start_time'         => $startTime > 0 ? date('Y-m-d H:i:s', $startTime) : 'N/A',
+                            'last_restart_time'  => ($lastRestartTime == 0 ? 'never' : date('Y-m-d H:i:s', $lastRestartTime))
+                        )
+                    )
                 );
+                }
             } else {
                 $version['opcache_product_name'] .= ' installed, but not enabled.';
             }
 
-            $directives = [];
-            ksort($config['directives']);
-            foreach ($config['directives'] as $k => $v) {
-                $directives[$k] = $v;
+            $directives = array();
+            if (isset($config['directives']) && is_array($config['directives'])) {
+                ksort($config['directives']);
+                foreach ($config['directives'] as $k => $v) {
+                    $directives[$k] = $v;
+                }
             }
         }
 
-        return [
+        return array(
             'enabled'  => $enabled,
             'version'    => $version,
             'overview'   => $overview,
-            'directives' => $directives,
-        ];
+            'directives' => $directives
+        );
     }
 }

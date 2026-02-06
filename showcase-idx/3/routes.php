@@ -89,13 +89,107 @@ function showcaseidx_get_signin_image( $lead_uuid ) {
   $website_uuid = get_option( 'showcaseidx_website_uuid' );
   $api_url = SHOWCASEIDX_SEARCH_HOST . '/app/signin/image/';
 
-  $response = wp_remote_get( $api_url . $lead_uuid, array( 'timeout' => 5, 'httpversion' => '1.1' ) );
+  $response = wp_remote_get( $api_url . $lead_uuid, array(
+      'timeout' => 5,
+      'httpversion' => '1.1',
+      'headers' => [
+          'Origin' => home_url(),
+      ]
+  ) );
 
-  if ( wp_remote_retrieve_response_code( $response ) == 200 ) {
-    header( 'Set-Cookie: ' . wp_remote_retrieve_header( $response, 'set-cookie' ) );
-    header( 'Content-Type: '. wp_remote_retrieve_header( $response, 'content-type' ) );
+    if ( wp_remote_retrieve_response_code( $response ) == 200 ) {
+        $cookies = wp_remote_retrieve_header( $response, 'set-cookie' );
 
-    print wp_remote_retrieve_body( $response );
-    exit;
-  }
+        if ( $cookies ) {
+            showcaseidx_set_cookies( $cookies );
+        }
+
+        header( 'Content-Type: ' . wp_remote_retrieve_header( $response, 'content-type' ) );
+        echo wp_remote_retrieve_body( $response );
+        exit;
+    }
+}
+
+function showcaseidx_set_cookies( $cookies ) {
+    $current_domain = parse_url( home_url(), PHP_URL_HOST );
+    $default_expiry = time() + (90 * DAY_IN_SECONDS); // 3 months
+
+    foreach ( (array) $cookies as $cookie ) {
+        $parsed = showcaseidx_parse_cookie_header( $cookie );
+        if ( ! $parsed ) {
+            continue;
+        }
+
+        $cookie_options = array(
+            'expires'  => $parsed['expires'] ?: $default_expiry,
+            'path'     => $parsed['path'],
+            'domain'   => $current_domain,
+            'secure'   => is_ssl(),
+            'httponly' => true,
+            'samesite' => 'Lax',
+        );
+
+        if ( version_compare( PHP_VERSION, '7.3.0', '>=' ) ) {
+            setcookie( $parsed['name'], $parsed['value'], $cookie_options );
+        } else {
+            $cookie_string = sprintf(
+                '%s=%s; expires=%s; path=%s; domain=%s; samesite=%s',
+                $parsed['name'],
+                $parsed['value'],
+                gmdate( 'D, d M Y H:i:s T', $cookie_options['expires'] ),
+                $cookie_options['path'],
+                $cookie_options['domain'],
+                $cookie_options['samesite']
+            );
+            if ( $cookie_options['secure'] ) {
+                $cookie_string .= '; secure';
+            }
+            if ( $cookie_options['httponly'] ) {
+                $cookie_string .= '; httponly';
+            }
+            header( 'Set-Cookie: ' . $cookie_string, false );
+        }
+    }
+}
+
+function showcaseidx_parse_cookie_header( $cookie_header ) {
+    $parts = explode( ';', $cookie_header );
+    $cookie = [];
+    foreach ( $parts as $index => $part ) {
+        $part = trim( $part );
+        if ( $index === 0 ) {
+            // First part is always name=value
+            list( $name, $value ) = explode( '=', $part, 2 );
+            $cookie['name'] = $name;
+            $cookie['value'] = $value;
+        } else {
+            if ( stripos( $part, 'expires=' ) === 0 ) {
+                $cookie['expires'] = strtotime( substr( $part, 8 ) );
+            } elseif ( stripos( $part, 'path=' ) === 0 ) {
+                $cookie['path'] = substr( $part, 5 );
+            } elseif ( stripos( $part, 'domain=' ) === 0 ) {
+                $cookie['domain'] = substr( $part, 7 );
+            }
+        }
+    }
+    // Set defaults if not present
+    if ( !isset( $cookie['expires'] ) ) $cookie['expires'] = 0;
+    if ( !isset( $cookie['path'] ) ) $cookie['path'] = '/';
+    return $cookie;
+}
+
+function showcaseidx_get_cookies() {
+    $wp_cookies = array();
+
+    if ( isset( $_COOKIE['sidx_token'] ) ) {
+        $wp_cookie = new WP_Http_Cookie( array(
+            'name'  => 'sidx_token',
+            'value' => $_COOKIE['sidx_token'],
+            'path'  => '/',
+            'domain' => '',
+        ) );
+        $wp_cookies[] = $wp_cookie;
+    }
+
+    return $wp_cookies;
 }

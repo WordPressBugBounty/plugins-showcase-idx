@@ -101,7 +101,11 @@ function showcase_render_search_page( WP $wp, $widget_url_path, $widget_url_quer
 
   $http_status_code = wp_remote_retrieve_response_code( $response );
   if ( $http_status_code == 200 ) {
-    header( 'Set-Cookie: ' . wp_remote_retrieve_header( $response, 'set-cookie' ) );
+      $cookies = wp_remote_retrieve_header( $response, 'set-cookie' );
+
+      if ( $cookies ) {
+          showcaseidx_set_cookies( $cookies );
+      }
 
     $widget = json_decode( wp_remote_retrieve_body( $response ) );
 
@@ -200,29 +204,27 @@ function get_user_agent() {
 }
 
 function showcase_retrieve_app( $path, $query ) {
-  $cookies = array();
-  foreach ( $_COOKIE as $name => $value ) {
-    $cookies[] = new WP_Http_Cookie( array( 'name' => $name, 'value' => $value ) );
-  }
+  $cookies = showcaseidx_get_cookies();
 
   parse_str( $query, $query_vars );
 
   $query_vars['website_uuid'] = get_option( 'showcaseidx_website_uuid' );
   $query_vars['bc_prune_widget'] = 1;
 
-  return wp_remote_post(
-    SHOWCASEIDX_SEARCH_HOST . '/app/render' . $path . '?' . http_build_query( $query_vars ),
-    array(
-      'timeout' => 10,
-      'httpversion' => '1.1',
-      'cookies' => $cookies,
-      'body' => array_map( 'stripslashes', $_POST ),
-      'headers' => array(
-        'X-Forwarded-For' => get_client_ip(),
-        'X-Client-User-Agent' => get_user_agent(),
-      ),
-    )
-  );
+    return wp_remote_post(
+        SHOWCASEIDX_SEARCH_HOST . '/app/render' . $path . '?' . http_build_query( $query_vars ),
+        array(
+            'timeout' => 10,
+            'httpversion' => '1.1',
+            'cookies' => $cookies,
+            'body' => array_map( 'stripslashes', $_POST ),
+            'headers' => array(
+                'X-Forwarded-For' => get_client_ip(),
+                'X-Client-User-Agent' => get_user_agent(),
+                'Origin' => home_url(),
+            ),
+        )
+    );
 }
 
 function showcaseidx_create_page( $title, $content ) {

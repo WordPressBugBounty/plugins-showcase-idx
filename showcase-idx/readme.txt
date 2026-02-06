@@ -9,7 +9,7 @@ Requires at least: 4.6.0
 Tested up to: 6.8
 Requires PHP: 5.3.0
 
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 
 
 
@@ -179,6 +179,12 @@ Please visit the Showcase IDX website for the latest news and information. [Sear
 
 
 == Changelog ==
+
+= 3.3.1 =
+
+* Fixed compatibility issues with PHP 8.3 and 8.4.
+* Resolved issues related to the Sign-in and Sign-up workflows.
+* Improved error handling and performance optimizations.
 
 = 3.3.0 =
 
