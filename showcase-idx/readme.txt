@@ -6,10 +6,10 @@ Tags: idx, idx search, MLS, real estate search, lead capture
 
 Requires at least: 4.6.0
 
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 5.3.0
 
-Stable tag: 3.3.1
+Stable tag: 3.3.2
 
 
 
@@ -179,6 +179,10 @@ Please visit the Showcase IDX website for the latest news and information. [Sear
 
 
 == Changelog ==
+
+= 3.3.2 =
+
+* Added compatibility with WordPress 6.9.
 
 = 3.3.1 =
 

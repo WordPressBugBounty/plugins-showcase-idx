@@ -5,7 +5,7 @@
  * Description: Interactive, responsive, SEO-friendly real estate IDX property search.
  * Author: Showcase IDX
  * Author URI: https://showcaseidx.com/
- * Version: 3.3.1
+ * Version: 3.3.2
  * License: GPLv3
  */
 
